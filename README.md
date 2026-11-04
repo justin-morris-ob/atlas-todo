@@ -4,7 +4,7 @@ An independently owned application that runs inside the Atlas shell. This reposi
 
 ## Status
 
-Extracted from [Atlas draft PR #115](https://git.onebrief.tools/Onebrief/atlas/pull/115). Published-dependency installation, typecheck, frontend build and real PostgreSQL/API tests pass. This is a local POC, not a production deployment. The earlier Atlas-hosted demo remains available during migration.
+Extracted from [Atlas draft PR #115](https://git.onebrief.tools/Onebrief/atlas/pull/115). Published-dependency installation, typecheck, frontend build and real PostgreSQL/API tests pass. The app also loads in an unmodified Atlas shell from a separate checkout. This is a local POC, not a production deployment. The earlier Atlas-hosted demo remains available during migration.
 
 The Atlas packages are pinned to the compatible `0.1.0` release set because the published federation configuration requires SDK/UI `0.1.0` shared singletons. Upgrade the shell, SDK, UI and federation configuration together.
 
@@ -27,7 +27,7 @@ The app runs at http://localhost:4711. The app builds and serves without an Atla
 ATLAS_CHECKOUT=/absolute/path/to/atlas pnpm poc:shell
 ```
 
-Open http://localhost:4710 and sign in as Priya. `poc:shell` launches the existing Atlas shell with `ATLAS_ENABLED_APPS=hello-todo` and public/internal URLs pointing to port 4711. It neither copies nor modifies Atlas source. The shell reads this app's generated `atlas-app.json` and loads its federation remote.
+Open http://localhost:4710 and sign in as **Priya Raman** (the existing `p-priya` demo owner). `poc:shell` launches the existing Atlas shell with `ATLAS_ENABLED_APPS=hello-todo` and public/internal URLs pointing to port 4711. It neither copies nor modifies Atlas source. The shell reads this app's generated `atlas-app.json` and loads its federation remote.
 
 ## Existing demo data
 
