@@ -1,0 +1,20 @@
+{{- define "hello-todo.env" -}}
+{{ include "atlas-app.env" . }}
+{{- range $key := list "TODO_DATABASE_URL" "TODO_BC_READ_TOKEN" "TODO_BC_OWNER_ID" }}
+- name: {{ $key }}
+  valueFrom:
+    secretKeyRef:
+      name: hello-todo-runtime
+      key: {{ $key }}
+{{- end }}
+{{- end }}
+{{ include "atlas-app.serviceAccount" . }}
+---
+{{ include "atlas-app.service" . }}
+---
+{{- $deployment := include "atlas-app.deployment" (dict "root" . "env" (include "hello-todo.env" .)) | fromYaml }}
+{{- $container := index $deployment.spec.template.spec.containers 0 }}
+{{- $_ := set $container.readinessProbe.httpGet "path" "/api/ready" }}
+{{ $deployment | toYaml }}
+---
+{{ include "atlas-app.udsPackage" . }}

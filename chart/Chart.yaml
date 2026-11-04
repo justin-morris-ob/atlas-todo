@@ -1,0 +1,9 @@
+apiVersion: v2
+name: atlas-hello-todo
+description: The hello-todo application's independently publishable Helm chart
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+dependencies:
+  - name: atlas-app
+    version: ">=0.1.0-0"

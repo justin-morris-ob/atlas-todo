@@ -1,0 +1,2 @@
+# Package values (zarf --values) for the hello-todo chart. Empty: chart defaults apply.
+hello-todo: {}

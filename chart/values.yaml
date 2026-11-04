@@ -1,0 +1,33 @@
+app: hello-todo
+shell: false
+image: ghcr.io/onebrief/atlas-hello-todo:dev
+imagePullPolicy: IfNotPresent
+partOf: atlas-apps
+
+# The demo shell still owns process-local sessions.
+replicaCount: 1
+strategy:
+  type: Recreate
+port: 8080
+healthPath: /healthz
+resources:
+  requests:
+    cpu: 20m
+    memory: 64Mi
+  limits:
+    memory: 256Mi
+
+runtime:
+  shellOrigin: http://localhost:4700
+  shellInternalUrl: http://shell.atlas-shell.svc.cluster.local:8080
+  # Session introspection goes to the shell; the shell's brief calls this app.
+  calls: [shell]
+  callers: [shell]
+
+# UDS supplies the cluster domain. host is an approved subdomain, not a URL.
+# In path mode the app is served at /apps/<app>/ on the shared host.
+ingress:
+  enabled: false
+  mode: host
+  host: ""
+  gateway: tenant

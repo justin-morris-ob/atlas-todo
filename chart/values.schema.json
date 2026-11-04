@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "$comment": "Source of every src/apps/*/chart/values.schema.json. Helm validates only the parent chart's schema, so each app chart carries an identical copy; charts/contract.test.mjs checks they match.",
+  "type": "object",
+  "required": [
+    "app",
+    "shell",
+    "image",
+    "runtime",
+    "ingress",
+    "replicaCount",
+    "strategy"
+  ],
+  "properties": {
+    "app": {
+      "$ref": "#/definitions/appId"
+    },
+    "shell": {
+      "type": "boolean"
+    },
+    "image": {
+      "type": "string",
+      "minLength": 1
+    },
+    "imagePullPolicy": {
+      "enum": [
+        "IfNotPresent",
+        "Always",
+        "Never"
+      ]
+    },
+    "ingress": {
+      "type": "object",
+      "required": [
+        "enabled",
+        "host",
+        "gateway"
+      ],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "mode": {
+          "enum": [
+            "host",
+            "path"
+          ]
+        },
+        "host": {
+          "type": "string"
+        },
+        "gateway": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false,
+      "if": {
+        "properties": {
+          "enabled": {
+            "const": true
+          },
+          "mode": {
+            "not": {
+              "const": "path"
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "host": {
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "nameOverride": {
+      "type": "string"
+    },
+    "partOf": {
+      "type": "string"
+    },
+    "replicaCount": {
+      "const": 1
+    },
+    "strategy": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "const": "Recreate"
+        }
+      },
+      "additionalProperties": false
+    },
+    "port": {
+      "const": 8080
+    },
+    "healthPath": {
+      "const": "/healthz"
+    },
+    "env": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[A-Z_][A-Z0-9_]*$"
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "required": [
+        "shellOrigin",
+        "shellInternalUrl"
+      ],
+      "properties": {
+        "shellOrigin": {
+          "type": "string",
+          "pattern": "^https?://[^/]+$"
+        },
+        "shellInternalUrl": {
+          "type": "string",
+          "pattern": "^https?://[^/]+$"
+        },
+        "enabledApps": {
+          "$ref": "#/definitions/remoteIds"
+        },
+        "publicUrls": {
+          "$ref": "#/definitions/publicUrls"
+        },
+        "internalUrls": {
+          "$ref": "#/definitions/appUrls"
+        },
+        "calls": {
+          "$ref": "#/definitions/peerIds"
+        },
+        "callers": {
+          "$ref": "#/definitions/peerIds"
+        },
+        "slotGrants": {
+          "$ref": "#/definitions/slotGrants"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "if": {
+    "properties": {
+      "shell": {
+        "const": true
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "app": {
+        "const": "shell"
+      },
+      "runtime": {
+        "required": [
+          "enabledApps"
+        ]
+      }
+    }
+  },
+  "else": {
+    "properties": {
+      "app": {
+        "not": {
+          "const": "shell"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "appId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "remoteIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/appId"
+          },
+          {
+            "not": {
+              "const": "shell"
+            }
+          }
+        ]
+      }
+    },
+    "peerIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/definitions/appId"
+      }
+    },
+    "appUrls": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/definitions/appId"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^https?://[^/]+$"
+      }
+    },
+    "publicUrls": {
+      "description": "Browser URL per app: an origin, or a same-origin path such as /apps/<id> behind a gateway.",
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/definitions/appId"
+      },
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^(https?://[^/]+|/\\S+)$"
+      }
+    },
+    "slotGrants": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9-]*/[a-z][a-z0-9-]*$"
+      },
+      "additionalProperties": {
+        "$ref": "#/definitions/remoteIds"
+      }
+    }
+  }
+}

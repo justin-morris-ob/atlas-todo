@@ -1,0 +1,53 @@
+{
+  "name": "@onebrief/hello-todo",
+  "version": "0.1.0",
+  "private": true,
+  "atlas": {
+    "id": "hello-todo",
+    "title": "Hello Todo",
+    "icon": "check",
+    "tone": "learn",
+    "contributes": [
+      "shell/home-updates"
+    ]
+  },
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "start": "node bff/server.mjs",
+    "poc:setup": "node scripts/local.mjs setup",
+    "poc:start": "node scripts/local.mjs start",
+    "poc:fetch": "node scripts/local.mjs fetch",
+    "poc:test": "node scripts/local.mjs test",
+    "migrate": "node scripts/migrate.mjs",
+    "typecheck": "tsc --noEmit",
+    "contracts": "node scripts/contracts.mjs",
+    "test": "node scripts/local.mjs test",
+    "dev": "node scripts/local.mjs start",
+    "poc:shell": "node scripts/shell.mjs"
+  },
+  "dependencies": {
+    "@onebrief/atlas-bff-kit": "0.1.0",
+    "@onebrief/atlas-contract-shell": "0.1.0",
+    "@onebrief/atlas-sdk": "0.1.0",
+    "@onebrief/atlas-ui": "0.1.0",
+    "@onebrief/ux-kit": "0.1.0",
+    "pg": "8.16.3",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@onebrief/atlas-vite-config": "0.1.0",
+    "vite": "8.2.1",
+    "typescript": "6.0.3",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@types/node": "24.19.2",
+    "ajv": "8.20.0",
+    "openapi-typescript": "7.13.0"
+  },
+  "packageManager": "pnpm@11.23.0",
+  "engines": {
+    "node": ">=26"
+  }
+}

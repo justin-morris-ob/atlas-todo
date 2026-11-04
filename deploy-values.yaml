@@ -1,0 +1,2 @@
+# Use the same immutable image reference captured by this Zarf package.
+image: "###ZARF_CONST_IMAGE###"

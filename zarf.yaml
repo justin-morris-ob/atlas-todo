@@ -1,0 +1,36 @@
+kind: ZarfPackageConfig
+metadata:
+  name: atlas-hello-todo
+  version: "###ZARF_PKG_TMPL_VERSION###"
+  description: Independently deployable hello-todo application for the federated registry demo
+  annotations:
+    # Dev intake contract, validated by scripts/dev-service-contract.jq.
+    platform.onebrief.com/deployment: '{"schema_version":1,"workloads":["deployment/hello-todo"],"prerequisites":[],"image_path":["image"]}'
+constants:
+  - name: IMAGE
+    value: "###ZARF_PKG_TMPL_IMAGE###"
+# Defaults for the chart values mapping below, so a deploy without --values
+# (the local bundle) still resolves .hello-todo.
+values:
+  files:
+    - package-values.yaml
+components:
+  - name: hello-todo
+    required: true
+    charts:
+      - name: atlas-hello-todo
+        version: "###ZARF_PKG_TMPL_VERSION###"
+        releaseName: atlas-hello-todo
+        namespace: atlas-hello-todo
+        localPath: "###ZARF_PKG_TMPL_CHART###"
+        templatedValuesFiles:
+          - deploy-values.yaml
+        # Atlas dev delivery passes environment values under .hello-todo. The image
+        # stays pinned to the one this package captured.
+        values:
+          - sourcePath: .hello-todo
+            targetPath: .
+            excludePaths:
+              - .hello-todo.image
+    images:
+      - "###ZARF_PKG_TMPL_IMAGE###"
